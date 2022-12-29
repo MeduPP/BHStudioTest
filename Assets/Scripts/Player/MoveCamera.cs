@@ -1,14 +1,16 @@
 using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class MoveCamera : MonoBehaviour
+public class MoveCamera : NetworkBehaviour
 {
-    [SerializeField] private Camera _camera;
     [SerializeField] private Transform _targetPoint;
+    [SerializeField] private Vector3 _offset= new Vector3(0f, 1f, -3f);
     [SerializeField] private float SensivityY;
     [SerializeField] private float _limitY = 30;
     
     private Vector3 _localPosition;
+    private Camera _camera;
     private float _currentRotation;
     private float mouseY;
 
@@ -18,18 +20,38 @@ public class MoveCamera : MonoBehaviour
         set { _camera.transform.position = value; }
     }
 
-    void Start()
+    private void Awake()
+    {     
+        _camera = Camera.main;
+    }
+
+    public override void OnStartLocalPlayer()
     {
+        if (_camera != null)
+        {
+            _camera.transform.SetParent(transform);
+            _camera.transform.localPosition = _offset;
+        }
+
         _localPosition = _targetPoint.InverseTransformPoint(_cameraPosition);
+    }
+
+    public override void OnStopLocalPlayer()
+    {
+        if (_camera != null)
+        {
+            _camera.transform.SetParent(null);
+            _camera.transform.localPosition = new Vector3(26f, 21f, 0f);
+            _camera.transform.localEulerAngles = new Vector3(50f, -90f, 0f);
+        }
     }
 
     private void Update()
     {
-        mouseY = Input.GetAxis("Mouse Y");
-    }
+        if (!isLocalPlayer)
+            return;
 
-    private void FixedUpdate()
-    {
+        mouseY = Input.GetAxis("Mouse Y");
         CameraRatation(mouseY);
     }
 
