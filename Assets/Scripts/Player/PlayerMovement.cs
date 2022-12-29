@@ -14,10 +14,6 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField]
     public float _rotationSpeed;
 
-    [SyncVar]
-    [SerializeField]
-    float _rotationSmoothTime;
-
     [Header("Player dash")]
     [SyncVar]
     [SerializeField] private float _dashSpeed;
@@ -25,12 +21,12 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float _dashDistance;
 
     private Rigidbody _rb;
-    private Vector3 _moveDirection;
+    
     private float _mouseMoveDirection;
+    private Vector3 _moveDirection;
+
     private bool _duringDash = false;
     public Coroutine DashCoroutine;
-
-    public static Action<GameObject, GameObject> PlayerHit;
 
     public void Start()
     {
@@ -39,10 +35,6 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Update()
     {
-        if (isServer)
-        {
-
-        }
         if (isLocalPlayer && isClient && isOwned)
         {
             _moveDirection = GetMoveDirection();
@@ -53,7 +45,6 @@ public class PlayerMovement : NetworkBehaviour
 
             if (GetDashMouse() && !_duringDash)
             {
-                //CmdStartDash();
                 StartDash();
             }
         }
@@ -62,35 +53,20 @@ public class PlayerMovement : NetworkBehaviour
 
     public void FixedUpdate()
     {
-        if (isServer)
-        {
-
-        }
         if (isLocalPlayer && isClient && isOwned)
         {
             if (_duringDash)
             {
-
+                //Do nothing
             }
             else
             {
-                //CmdMovePlayer(_moveDirection);
                 MovePlayer(_moveDirection);
             }
         }
     }
 
     #region Move Player
-    //[Command]
-    //private void CmdMovePlayer(Vector3 moveDirection)
-    //{
-    //    _rb.velocity = transform.forward * moveDirection.z * _moveSpeed * Time.deltaTime;
-
-    //    if (_mouseMoveDirection != 0)
-    //    {
-    //        transform.Rotate(new Vector3(0, _mouseMoveDirection * _moveSpeed * Time.deltaTime, 0));
-    //    }
-    //}
 
     private void MovePlayer(Vector3 moveDirection)
     {
@@ -105,24 +81,10 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-
-    //[Command]
-    //public void CmdStartDash()
-    //{
-    //    DashCoroutine = StartCoroutine(DoDash());
-    //}
-
     public void StartDash()
     {
         DashCoroutine = StartCoroutine(DoDash());
     }
-
-    //[Command]
-    //public void CmdStopDash()
-    //{
-    //    StopCoroutine(DashCoroutine);
-    //    _duringDash = false;
-    //}
 
     public void StopDash()
     {

@@ -31,6 +31,7 @@ public class Player : NetworkBehaviour
         _isInjured = newValue;
     }
 
+    //if the color has changed, then change the color of the player mesh
     private void SyncColor(Color oldColor, Color newColor)
     {
         Material[] materials = _colorTarget.materials;
@@ -41,30 +42,8 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [Command(requiresAuthority = false)]
-    public void CmdGetHit()
-    {
-        _isInjured = true;
-        StartCoroutine(InInjure());
-    }
 
-
-    public void GetHit()
-    {
-        _isInjured = true;
-        if (isClient && isLocalPlayer)
-            StartCoroutine(InInjure());
-    }
-
-    IEnumerator InInjure()
-    {
-        currenColor = _injureColor;
-        yield return new WaitForSeconds(_injureTime);
-        currenColor = Color.white;
-
-        _isInjured = false;
-    }
-
+    //if the player hits an obstacle while dashing, cancel the dash
     private void OnCollisionStay(Collision collision)
     {
         if (_playerMovement.DashCoroutine != null && collision.gameObject.CompareTag("Obstacle"))
@@ -73,6 +52,8 @@ public class Player : NetworkBehaviour
                 _playerMovement.StopDash();
         }
     }
+
+    #region Injure logic
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -96,4 +77,28 @@ public class Player : NetworkBehaviour
             player.CmdGetHit();
         }
     }
+
+    [Command(requiresAuthority = false)]
+    public void CmdGetHit()
+    {
+        _isInjured = true;
+        StartCoroutine(InInjure());
+    }
+
+    public void GetHit()
+    {
+        _isInjured = true;
+        if (isClient && isLocalPlayer)
+            StartCoroutine(InInjure());
+    }
+
+    IEnumerator InInjure()
+    {
+        currenColor = _injureColor;
+        yield return new WaitForSeconds(_injureTime);
+        currenColor = Color.white;
+
+        _isInjured = false;
+    }
+    #endregion
 }
