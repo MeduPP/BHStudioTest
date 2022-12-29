@@ -1953,6 +1953,8 @@ MonoBehaviour:
   _healthPoint: 5
   _rotationSpeed: 500
   _rotationSmoothTime: 0.2
+  _dashSpeed: 500
+  _dashDistance: 10
 --- !u!114 &6637041824676328298
 MonoBehaviour:
   m_ObjectHideFlags: 0
