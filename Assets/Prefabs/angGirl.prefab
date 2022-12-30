@@ -1952,6 +1952,10 @@ MonoBehaviour:
   _injureColor: {r: 1, g: 0, b: 0, a: 0.5764706}
   _colorTarget: {fileID: 2619429573031827949}
   _injureTime: 2
+  playerInfoUIPrefab: {fileID: 8063390756316959888, guid: 9c4f02989ad22e24c94c53c749e21495, type: 3}
+  playerTextColor: {r: 1, g: 1, b: 1, a: 1}
+  playerNumber: 0
+  playerScore: 0
 --- !u!114 &-1872767931480107513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1969,7 +1973,6 @@ MonoBehaviour:
   syncInterval: 0.1
   _moveSpeed: 200
   _rotationSpeed: 3000
-  _rotationSmoothTime: 0.4
   _dashSpeed: 500
   _dashDistance: 10
 --- !u!114 &6637041824676328298
